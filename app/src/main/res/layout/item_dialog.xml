@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:id="@+id/item_dialog">
 
-    <TextView
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/itemName" />
+        android:id="@+id/itemName"
+        android:text="hihi"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center" />-->
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Delete Item"
         android:id="@+id/deleteButton"
-        android:layout_below="@+id/itemName"/>
+        android:layout_centerInParent="true" />
+
 </LinearLayout>

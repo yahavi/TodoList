@@ -1,12 +1,20 @@
 package il.ac.huji.todolist;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Resources;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
 import java.util.Arrays;
 import java.util.ArrayList;
 public class TodoListManagerActivity extends ActionBarActivity {
@@ -24,6 +32,9 @@ public class TodoListManagerActivity extends ActionBarActivity {
         m_TodoAdapter = new ItemsAdapter(
                 this, android.R.layout.simple_list_item_1, itemsArrayList);
         lstTodoItems.setAdapter(m_TodoAdapter);
+
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,4 +61,6 @@ public class TodoListManagerActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
