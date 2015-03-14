@@ -1,4 +1,5 @@
 package il.ac.huji.todolist;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,9 +23,15 @@ import java.util.ArrayList;
 public class TodoListManagerActivity extends ActionBarActivity {
     EditText m_EdtNewItem;
     ArrayAdapter<String> m_TodoAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_todo_list_manager);
         Resources res = getResources();
         ListView lstTodoItems = (ListView) findViewById(R.id.lstTodoItems);

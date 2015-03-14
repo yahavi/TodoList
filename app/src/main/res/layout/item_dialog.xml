@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:id="@+id/item_dialog">
+    android:id="@+id/item_dialog"
+    android:orientation="vertical"
+    android:backgroundDimEnabled="false">
 
-    <!--<TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:background="@android:color/darker_gray"
         android:id="@+id/itemName"
-        android:text="hihi"
-        android:textColor="@android:color/black"
-        android:layout_gravity="center" />-->
+        android:text="asaghhsd"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
+
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:text="Delete Item"
         android:id="@+id/deleteButton"
-        android:layout_centerInParent="true" />
+        android:layout_below="@+id/itemName"
+        android:layout_centerInParent="true"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
 
 </LinearLayout>
