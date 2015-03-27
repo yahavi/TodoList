@@ -67,16 +67,18 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
             tvItemName = (TextView) rawView.findViewById(R.id.txtTodoTitle);
             tvItemDate = (TextView) rawView.findViewById(R.id.txtTodoDueDate);
             tvItemName.setText(item.getItemName());
-            tvItemDate.setText(getDateFormat(item.getDate()));
+            if (item.getDate() != null) {
+                tvItemDate.setText(getDateFormat(item.getDate()));
 
-            Calendar currentDate = Calendar.getInstance();
-            if (item.getDate().after(currentDate) || isToday(item.getDate())){
-                tvItemDate.setTextColor(Color.BLACK);
-                tvItemName.setTextColor(Color.BLACK);
-            } else {
-                tvItemDate.setTextColor(Color.RED);
-                tvItemName.setTextColor(Color.RED);
-            }
+                Calendar currentDate = Calendar.getInstance();
+                if (item.getDate().after(currentDate) || isToday(item.getDate())) {
+                    tvItemDate.setTextColor(Color.BLACK);
+                    tvItemName.setTextColor(Color.BLACK);
+                } else {
+                    tvItemDate.setTextColor(Color.RED);
+                    tvItemName.setTextColor(Color.RED);
+                }
+            } // Else, use the default value, "No due date"
         }
         return rawView;
     } //getView()

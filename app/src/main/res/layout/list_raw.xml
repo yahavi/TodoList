@@ -16,5 +16,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/txtTodoDueDate"
+        android:text="@string/no_due_date"
         android:layout_weight="1"/>
 </LinearLayout>

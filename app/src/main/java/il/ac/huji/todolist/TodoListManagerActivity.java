@@ -27,6 +27,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
     public static final int CALL_OPTION = 1;
     public static final int ADD_REQ_CODE = 0;
     public static final String CALL_STRING_REGEX = "\\s*\\d[\\d-]*\\s*";
+    public static final int ILLEGAL_DATE = -1;
 
     ArrayList<TodoItem> m_ItemsArrayList;
     ItemsAdapter m_TodoAdapter;
@@ -83,11 +84,17 @@ public class TodoListManagerActivity extends ActionBarActivity {
                 if (itemName == null){
                     return;
                 }
-                Calendar date = new GregorianCalendar();
 
-                date.set(data.getIntExtra(YEAR, 0),
-                         data.getIntExtra(MONTH, 0),
-                         data.getIntExtra(DAY, 0));
+                Calendar date;
+                int year = data.getIntExtra(YEAR, ILLEGAL_DATE);
+                int month = data.getIntExtra(MONTH, ILLEGAL_DATE);
+                int day = data.getIntExtra(DAY, ILLEGAL_DATE);
+                if (year == ILLEGAL_DATE || month == ILLEGAL_DATE || day == ILLEGAL_DATE){
+                    date = null;
+                } else {
+                    date = new GregorianCalendar();
+                    date.set(year, month, day);
+                }
 
                 m_TodoAdapter.add(new TodoItem(itemName, date));
         }
@@ -134,6 +141,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
         if (isCallFormat(itemName)) {
             menu.add(Menu.NONE, CALL_OPTION , Menu.NONE, itemName.trim());
         }
+        getMenuInflater().inflate(R.menu.menu_todo_list_manager, menu);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
