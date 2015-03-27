@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,20 +26,23 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
 
     }
 
-    private String getDateFormat(Calendar date){
+    private String getDateFormat(Date date){
         String res = "";
-
-        res += date.get(Calendar.DAY_OF_MONTH) + "/"
-            +  (date.get(Calendar.MONTH) + 1) + "/"
-            +  date.get(Calendar.YEAR);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        res += cal.get(Calendar.DAY_OF_MONTH) + "/"
+            +  (cal.get(Calendar.MONTH) + 1) + "/"
+            +  cal.get(Calendar.YEAR);
         return res;
     }
 
-    private static boolean isToday(Calendar date){
+    private static boolean isToday(Date date){
         Calendar currentDate = Calendar.getInstance();
-        return (date.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH) &&
-                date.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
-                date.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR));
+        Calendar chkDate = Calendar.getInstance();
+        chkDate.setTime(date);
+        return (chkDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH) &&
+                chkDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
+                chkDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR));
     }
 
     /**
@@ -71,7 +74,7 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
                 tvItemDate.setText(getDateFormat(item.getDate()));
 
                 Calendar currentDate = Calendar.getInstance();
-                if (item.getDate().after(currentDate) || isToday(item.getDate())) {
+                if (item.getDate().after(currentDate.getTime()) || isToday(item.getDate())) {
                     tvItemDate.setTextColor(Color.BLACK);
                     tvItemName.setTextColor(Color.BLACK);
                 } else {

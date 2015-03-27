@@ -14,20 +14,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 
 public class TodoListManagerActivity extends ActionBarActivity {
-    public static final String ITEM_NAME = "0";
-    public static final String DAY = "1";
-    public static final String MONTH = "2";
-    public static final String YEAR = "3";
-    public static final int DELETE_OPTION = 0;
-    public static final int CALL_OPTION = 1;
+
+    public static final int CALL_PLACE_IN_MENU = 1;
     public static final int ADD_REQ_CODE = 0;
-    public static final String CALL_STRING_REGEX = "\\s*\\d[\\d-]*\\s*";
-    public static final int ILLEGAL_DATE = -1;
 
     ArrayList<TodoItem> m_ItemsArrayList;
     ItemsAdapter m_TodoAdapter;
@@ -80,37 +73,15 @@ public class TodoListManagerActivity extends ActionBarActivity {
         }
         switch (reqCode) {
             case ADD_REQ_CODE:
-                String itemName = data.getStringExtra(ITEM_NAME);
+                String itemName = data.getStringExtra(AddNewTodoItemActivity.TITLE_EXTRA);
                 if (itemName == null){
                     return;
                 }
 
-                Calendar date;
-                int year = data.getIntExtra(YEAR, ILLEGAL_DATE);
-                int month = data.getIntExtra(MONTH, ILLEGAL_DATE);
-                int day = data.getIntExtra(DAY, ILLEGAL_DATE);
-                if (year == ILLEGAL_DATE || month == ILLEGAL_DATE || day == ILLEGAL_DATE){
-                    date = null;
-                } else {
-                    date = new GregorianCalendar();
-                    date.set(year, month, day);
-                }
+                Date date = (Date) data.getSerializableExtra(AddNewTodoItemActivity.DUE_DATE_EXTRA);
 
                 m_TodoAdapter.add(new TodoItem(itemName, date));
         }
-    }
-
-    /**
-     * @param str the string to check
-     * @return true iff the string is like the following formats: "call 123456789"
-     * or "caLL 123456-789" or "Call 123-456-789" etc.
-     */
-    private boolean isCallFormat(String str){
-        String callString;
-
-        str = str.trim().toLowerCase();
-        callString = getString(R.string.call).trim().toLowerCase();
-        return (str.matches(callString + CALL_STRING_REGEX));
     }
 
     @Override
@@ -137,23 +108,28 @@ public class TodoListManagerActivity extends ActionBarActivity {
         menu.setHeaderView(menuTitle);
 
         //Prepare the menu and hide/unhide "call" option
-        menu.add(Menu.NONE, DELETE_OPTION , Menu.NONE, R.string.delete_item);
-        if (isCallFormat(itemName)) {
-            menu.add(Menu.NONE, CALL_OPTION , Menu.NONE, itemName.trim());
-        }
         getMenuInflater().inflate(R.menu.menu_todo_list_manager, menu);
+        MenuItem callItem = menu.getItem(CALL_PLACE_IN_MENU);
+
+        String callString = getResources().getString(R.string.call) + " ";
+        if (itemName.toLowerCase().startsWith(callString.toLowerCase())){
+            itemName = callString + itemName.substring(itemName.indexOf(" ") + 1);
+            callItem.setTitle(itemName);
+        } else {
+            callItem.setVisible(false);
+        }
     }
+
 
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
         switch (item.getItemId()){
-            case DELETE_OPTION:
+            case R.id.menuItemDelete:
                 m_ItemsArrayList.remove(info.position);
                 m_TodoAdapter.notifyDataSetChanged();
                 break;
-            case CALL_OPTION: //If we reached here then the item have the correct "call" format
+            case R.id.menuItemCall: //If we reached here then the item have the correct "call" format
                 String callNumber = m_ItemsArrayList.get(info.position).getItemName().trim();
                 callNumber = callNumber.substring(callNumber.indexOf(' ')).trim();
                 Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + callNumber));
