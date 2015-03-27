@@ -3,8 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
+
     defaultConfig {
-        applicationId 'todolistmanager.huji.ac.il'
+        applicationId "tipcalculator.huji.ac.il.todolistmanager"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
@@ -15,8 +16,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    productFlavors {
     }
 }
 
