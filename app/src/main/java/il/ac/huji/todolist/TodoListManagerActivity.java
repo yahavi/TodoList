@@ -1,5 +1,8 @@
 package il.ac.huji.todolist;
+
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,6 +16,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,22 +29,30 @@ public class TodoListManagerActivity extends ActionBarActivity {
 
     ArrayList<TodoItem> m_ItemsArrayList;
     ItemsAdapter m_TodoAdapter;
+    ListDbHelper m_ListDbHelper;
+    SQLiteDatabase m_ListDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                                  WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
+        m_ListDbHelper = new ListDbHelper(this, m_ItemsArrayList);
+        m_ListDb = m_ListDbHelper.getWritableDatabase();
         prepareListAdapter();
+
+
+
     }
 
-    private void prepareListAdapter(){
+    private void prepareListAdapter() {
         ListView lstTodoItems;
 
         lstTodoItems = (ListView) findViewById(R.id.lstTodoItems);
-        m_ItemsArrayList = new ArrayList<>();
+      //  m_ListDbHelper.getWritableDatabase();
+        m_ItemsArrayList = m_ListDbHelper.getAllItems();//new ArrayList<>();
         m_TodoAdapter = new ItemsAdapter(this,
                                          R.layout.list_raw,
                                          m_ItemsArrayList);
@@ -49,8 +62,16 @@ public class TodoListManagerActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        m_ListDbHelper.saveState(m_ItemsArrayList);
+      //  m_ListDb.setVersion(m_ListDb.getVersion()+1);
+     //   m_ListDb.close();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// Inflate the menu; this adds items to the action bar if it is present.
+ // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_new_todo_item, menu);
         return true;
     }
@@ -68,19 +89,22 @@ public class TodoListManagerActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(
             int reqCode, int resCode, Intent data) {
-        if (data == null){
+        if (data == null) {
             return;
         }
         switch (reqCode) {
             case ADD_REQ_CODE:
-                String itemName = data.getStringExtra(AddNewTodoItemActivity.TITLE_EXTRA);
-                if (itemName == null){
+                String itemName =
+                        data.getStringExtra(AddNewTodoItemActivity.TITLE_EXTRA);
+                if (itemName == null) {
                     return;
                 }
-
-                Date date = (Date) data.getSerializableExtra(AddNewTodoItemActivity.DUE_DATE_EXTRA);
+                Date date = (Date)
+                        data.getSerializableExtra(
+                            AddNewTodoItemActivity.DUE_DATE_EXTRA);
 
                 m_TodoAdapter.add(new TodoItem(itemName, date));
+                m_ListDbHelper.insertItem(itemName, date);
         }
     }
 
@@ -112,7 +136,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
         MenuItem callItem = menu.getItem(CALL_PLACE_IN_MENU);
 
         String callString = getResources().getString(R.string.call) + " ";
-        if (itemName.toLowerCase().startsWith(callString.toLowerCase())){
+        if (itemName.toLowerCase().startsWith(callString.toLowerCase())) {
             itemName = callString + itemName.substring(itemName.indexOf(" ") + 1);
             callItem.setTitle(itemName);
         } else {
@@ -124,10 +148,11 @@ public class TodoListManagerActivity extends ActionBarActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menuItemDelete:
                 m_ItemsArrayList.remove(info.position);
                 m_TodoAdapter.notifyDataSetChanged();
+
                 break;
             case R.id.menuItemCall: //If we reached here then the item have the correct "call" format
                 String callNumber = m_ItemsArrayList.get(info.position).getItemName().trim();
