@@ -4,8 +4,8 @@ package il.ac.huji.todolist;
 import java.util.Date;
 
 public class TodoItem {
-    private String m_ItemName;
-    private Date m_Date;
+    private final String m_ItemName;
+    private final Date m_Date;
 
     public TodoItem(String itemName, Date date){
         m_ItemName = itemName;

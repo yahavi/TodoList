@@ -8,15 +8,16 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
 import java.util.Date;
 
 
 public class AddNewTodoItemActivity extends Activity {
     public static final String TITLE_EXTRA = "title";
     public static final String DUE_DATE_EXTRA = "dueDate";
-    Button m_YesButton, m_NoButton;
-    EditText m_EdtNewItem;
-    DatePicker m_DatePicker;
+    private Button m_YesButton, m_NoButton;
+    private EditText m_EdtNewItem;
+    private DatePicker m_DatePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
